@@ -1,6 +1,7 @@
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, GRU
 from keras.callbacks import CSVLogger, ModelCheckpoint
+from keras.utils import plot_model
 import h5py
 
 with h5py.File(''.join(['sp500_close.h5']), 'r') as hf:
@@ -33,4 +34,5 @@ model.add(Dense(outputSize))
 model.add(Activation('relu'))
 model.compile(loss='mse', optimizer='adam')
 model.summary()
-model.fit(trainingData, trainingLabels, batchSize=batchSize,validation_data=(validationData,validationLabels), epochs = epochs, callbacks=[CSVLogger(outputFileName+'.csv', append=True),ModelCheckpoint('weights/'+outputFileName+'-{epoch:02d}-{val_loss:.5f}.hdf5', monitor='val_loss', verbose=1,mode='min')])
+plot_model(model, to_file='model.png', show_shapes = True)
+model.fit(trainingData, trainingLabels, batch_size=batchSize, validation_data=(validationData,validationLabels), epochs = epochs, callbacks=[CSVLogger(outputFileName+'.csv', append=True),ModelCheckpoint('weights/'+outputFileName+'-{epoch:02d}-{val_loss:.5f}.hdf5', monitor='val_loss', verbose=1,mode='min')])
